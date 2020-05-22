@@ -37,6 +37,9 @@ ydata = np.array(ydata)
 def fitfunction(x,a,b,c):
     return a*x*x + b*x + c
 
+def expfunction(x,c,d):
+    return c*np.exp(-d*x)
+
 plt.xlabel('Time since adminstration of drug (days)')
 plt.ylabel('Viral Concentration (mg/dL)')
 plt.title("HIV Series")
@@ -46,12 +49,28 @@ plt.legend()
 
 popt,pcov = curve_fit(fitfunction,xdata,ydata)
 
+popt2,pcov2 = curve_fit(expfunction,xdata,ydata)
+
 perr = np.sqrt(np.diag(pcov))
-print (popt,perr)
+print ("Fit1: ",popt,perr)
+perr2 = np.sqrt(np.diag(pcov2))
+print ("Fit2: ",popt2,perr2)
+
+#xdata = np.append(xdata,10.0)
+#xdata = np.append(xdata,12.0)
+#xdata = np.append(xdata,14.0)
+#xdata = np.append(xdata,16.0)
+#xdata = np.append(xdata,18.0)
+
+print(xdata)
 
 plt.plot(xdata,fitfunction(xdata,*popt),'r-',
-         label='fit: a=%5.3f +/- %5.3f,\n     b=%5.3f +/- %5.3f,\n     c=%5.3f +/- %5.3f' % 
+         label='quad fit: a=%5.3f +/- %5.3f,\n     b=%5.3f +/- %5.3f,\n     c=%5.3f +/- %5.3f' % 
          (popt[0],perr[0],popt[1],perr[1],popt[2],perr[2]))
+
+plt.plot(xdata,expfunction(xdata,*popt2),'g-',
+         label='exp fit: a=%5.3f +/- %5.3f,\n     b=%5.3f +/- %5.3f' % 
+         (popt2[0],perr2[0],popt2[1],perr2[1]))
 
 plt.legend()
 
