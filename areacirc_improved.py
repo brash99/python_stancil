@@ -19,3 +19,10 @@ try:
 except ValueError:
     print("The input data must be an integer or a float!!!")
     
+    
+from PyQt5.QtWidgets import *
+
+app = QApplication([])
+label = QLabel("Hello World!")
+label.show()
+app.exec_()
