@@ -7,8 +7,8 @@ Created on Sat May 23 10:40:10 2020
 """
 
 import sys
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QMainWindow, QLabel, QLineEdit
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize    
 import numpy as np
@@ -50,14 +50,20 @@ class MainWindow(QMainWindow):
         pybutton.move(80, 60)        
 
     def clickMethod(self):
-        print('The radius of the circle: ' + self.inputData.text())
-        radius = float(self.inputData.text())
-        area = np.pi*radius*radius
-        circ = 2.0*np.pi*radius
-        outputText = ("%.2f" % area)
-        outputText2 = ("%.2f" % circ)    
-        self.outputData.setText(outputText)
-        self.outputData2.setText(outputText2)
+        
+        try:
+            print('The radius of the circle: ' + self.inputData.text())
+            radius = float(self.inputData.text())
+            ##### The following two lines are the only ones related to science!
+            area = np.pi*radius*radius
+            circ = 2.0*np.pi*radius
+            #####
+            outputText = ("%.2f" % area)
+            outputText2 = ("%.2f" % circ)    
+            self.outputData.setText(outputText)
+            self.outputData2.setText(outputText2)
+        except ValueError:
+            print('The radius must be a number!!')
         
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
