@@ -34,7 +34,7 @@ l = 4
 #        fcolors += sph_harm(m, l, theta, phi).real*sph_harm(m, l, theta, phi).real + sph_harm(m, l, theta, phi).imag*sph_harm(m, l, theta, phi).imag
 #        print (m,fcolors)
 
-m = 3
+m = 0
 fcolors = sph_harm(m, l, phi, theta).real*sph_harm(m, l, phi, theta).real + sph_harm(m, l, phi, theta).imag*sph_harm(m, l, phi, theta).imag
 
 fmax, fmin = fcolors.max(), fcolors.min()

@@ -124,8 +124,8 @@ print ("Exp: chisq/dof = ",chisqdof2)
 # whether to plot the +/- one standard deviation of the fit.
 #
 xmax = 7.5
-ichoice = 3
-errors = False
+ichoice = 1
+errors = True
 
 # Define another numpy array which goes from 0 to xmax, in steps
 # of 0.1.  We will use this for plotting the fits ... using a
