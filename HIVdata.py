@@ -81,7 +81,7 @@ def expfunction(x,c,d):
 plt.xlabel('Time since adminstration of drug (days)')
 plt.ylabel('Viral Concentration (mg/dL)')
 plt.title("HIV Series")
-plt.scatter(xdata,ydata,label='Experimental Data')
+plt.scatter(xdata,ydata,label='Data')
 plt.legend()
 
 
@@ -101,13 +101,30 @@ print ("Fit1: ",popt,perr)
 perr2 = np.sqrt(np.diag(pcov2))
 print ("Fit2: ",popt2,perr2)
 
+# Calculate the X^2/dof for each fit:
+stdev = 20000.0
+yfit = quadfunction(xdata,*popt)
+r = (ydata-yfit)
+chisq = np.sum(r**2/stdev**2)
+npar=len(popt)
+npts = len(xdata)
+chisqdof = chisq/(npts-npar)
+print ("Quad: chisq/dof = ",chisqdof)
+
+yfit2 = expfunction(xdata,*popt2)
+r2 = (ydata-yfit2)
+chisq2 = np.sum(r2**2/stdev**2)
+npar2=len(popt2)
+chisqdof2 = chisq/(npts-npar2)
+print ("Exp: chisq/dof = ",chisqdof2)
+
 
 # Set the maximum value of the x-axis to plot, which of the two fit
 # functions to plot (0 = neither, 1 = quad, 2 = exp, 3 = both), and 
 # whether to plot the +/- one standard deviation of the fit.
 #
 xmax = 7.5
-ichoice = 0
+ichoice = 3
 errors = False
 
 # Define another numpy array which goes from 0 to xmax, in steps
@@ -121,8 +138,8 @@ xfit = np.arange(0.0,xmax,0.1)
 #
 if (ichoice == 1 or ichoice==3):
     plt.plot(xfit,quadfunction(xfit,*popt),'r-',
-         label='quad fit: a=%5.3f +/- %5.3f,\n b=%5.3f +/- %5.3f,\n c=%5.3f +/- %5.3f' % 
-         (popt[0],perr[0],popt[1],perr[1],popt[2],perr[2]))
+         label='quad fit: a=%5.3f +/- %5.3f,\n b=%5.3f +/- %5.3f,\n c=%5.3f +/- %5.3f,\n X^2/dof = %5.3f' % 
+         (popt[0],perr[0],popt[1],perr[1],popt[2],perr[2],chisqdof))
 
     psi = np.random.multivariate_normal(popt,pcov,10000)
     ysamplei=np.asarray([quadfunction(xfit,*pi) for pi in psi])
@@ -134,8 +151,8 @@ if (ichoice == 1 or ichoice==3):
 
 if (ichoice == 2 or ichoice == 3):
     plt.plot(xfit,expfunction(xfit,*popt2),'g-',
-             label='exp fit: a=%5.3f +/- %5.3f,\n b=%5.3f +/- %5.3f' % 
-             (popt2[0],perr2[0],popt2[1],perr2[1]))
+             label='exp fit: a=%5.3f +/- %5.3f,\n b=%5.3f +/- %5.3f,\n X^2/dof = %5.3f' % 
+             (popt2[0],perr2[0],popt2[1],perr2[1],chisqdof2))
     
     ps = np.random.multivariate_normal(popt2,pcov2,10000)
     ysample=np.asarray([expfunction(xfit,*pi) for pi in ps])
