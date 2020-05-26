@@ -8,11 +8,19 @@ Created on Thu May 21 19:43:32 2020
 
 import math
 
-radius = float(input("Enter the radius of the circle: "))
+try:
+    
+    radius = float(input("Enter the radius of the circle: "))
 
-circumference = 2*math.pi*radius
-area = math.pi*radius**2
+    circumference = 2*math.pi*radius
+    area = math.pi*radius**2
 
-print("For a circle of radius",radius,
-      ", the circumference is ",circumference,
-      ", and the area is ",area,".")
+    print("For a circle of radius %.2f, the circumference is %.3f, and the area is %.4f." % (radius,circumference,area))
+    
+except (ValueError):
+    
+    print("Hey ... the radius must be a number!!")
+
+
+
+    
