@@ -22,30 +22,39 @@ x = np.sin(theta) * np.cos(phi)
 y = np.sin(theta) * np.sin(phi)
 z = np.cos(theta)
 
-l = 4
+l = 3
 
-#for m in range(-l,l+1):
-#    # Calculate the spherical harmonic Y(l,m) and normalize to [0,1]
-#    # fcolors = sph_harm(m, l, theta, phi).real
-#    if (m == -l):    
-#        fcolors = sph_harm(m, l, phi, theta).real*sph_harm(m, l, phi, theta).real + sph_harm(m, l, phi, theta).imag*sph_harm(m, l, phi, theta).imag
-#        print (m,fcolors)
-#    else:
-#        fcolors += sph_harm(m, l, theta, phi).real*sph_harm(m, l, theta, phi).real + sph_harm(m, l, theta, phi).imag*sph_harm(m, l, theta, phi).imag
-#        print (m,fcolors)
+nplots = 2*l + 2
+nrows = int(np.sqrt(nplots))
+ncolumns = int(nplots/nrows)
+if (ncolumns*nrows<nplots):
+    nrows=nrows+1
+if (ncolumns-nrows>1):
+    nrows=nrows+1
+    ncolumns=ncolumns-1
 
-m = 0
-fcolors = sph_harm(m, l, phi, theta).real*sph_harm(m, l, phi, theta).real + sph_harm(m, l, phi, theta).imag*sph_harm(m, l, phi, theta).imag
-
-fmax, fmin = fcolors.max(), fcolors.min()
-fcolors = (fcolors - fmin)/(fmax - fmin)
-
-#print(fcolors)
+print(nplots,nrows,ncolumns)
 
 # Set the aspect ratio to 1 so our sphere looks spherical
 fig = plt.figure(figsize=plt.figaspect(1.))
-ax = fig.add_subplot(111, projection='3d')
-ax.plot_surface(x, y, z,  rstride=1, cstride=1, facecolors=cm.seismic(fcolors))
-# Turn off the axis planes
-#ax.set_axis_off()
+
+for m in range(-l,l+1):
+    fcolors = sph_harm(m, l, phi, theta).real*sph_harm(m, l, phi, theta).real + sph_harm(m, l, phi, theta).imag*sph_harm(m, l, phi, theta).imag
+    fmax, fmin = fcolors.max(), fcolors.min()
+    fcolors = (fcolors - fmin)/(fmax - fmin)
+    
+    ax = plt.subplot(nrows,ncolumns,m+l+1,projection='3d')
+    ax.plot_surface(x, y, z,  rstride=1, cstride=1, facecolors=cm.seismic(fcolors))
+    
+    if (m == -l):    
+        fcolorsum = sph_harm(m, l, phi, theta).real*sph_harm(m, l, phi, theta).real + sph_harm(m, l, phi, theta).imag*sph_harm(m, l, phi, theta).imag
+        print (m,fcolors)
+    else:
+        fcolorsum += sph_harm(m, l, theta, phi).real*sph_harm(m, l, theta, phi).real + sph_harm(m, l, theta, phi).imag*sph_harm(m, l, theta, phi).imag
+        print (m,fcolors)
+         
+        
+ax = plt.subplot(nrows,ncolumns,2*l+2,projection='3d')
+ax.plot_surface(x, y, z,  rstride=1, cstride=1, facecolors=cm.seismic(fcolorsum))   
+
 plt.show()

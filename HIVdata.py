@@ -45,11 +45,13 @@ my_file = open(data_file)
 #
 xdata = []
 ydata = []
+
 for line in my_file:
     # This data file has two pieces of information on each line,
     # separated by a comma.  So, we split the line up using the
     # split function, and stuff the two numbers into some
-    # temporary variables, x and y.  
+    # temporary variables, x and y, both of which are STRINGS!!!!
+    #
     x,y = line.split(",")
     # Then, we add these bits of data to the two lists defined above.
     xdata += [(float(x))]
@@ -81,7 +83,7 @@ def expfunction(x,c,d):
 plt.xlabel('Time since adminstration of drug (days)')
 plt.ylabel('Viral Concentration (mg/dL)')
 plt.title("HIV Series")
-plt.scatter(xdata,ydata,label='Data')
+plt.scatter(xdata,ydata,label='March 2020')
 plt.legend()
 
 
@@ -94,6 +96,7 @@ plt.legend()
 # perr - contains the uncertainties in each of the fit parameters
 #
 popt,pcov = curve_fit(quadfunction,xdata,ydata)
+
 popt2,pcov2 = curve_fit(expfunction,xdata,ydata)
 
 perr = np.sqrt(np.diag(pcov))
@@ -123,8 +126,8 @@ print ("Exp: chisq/dof = ",chisqdof2)
 # functions to plot (0 = neither, 1 = quad, 2 = exp, 3 = both), and 
 # whether to plot the +/- one standard deviation of the fit.
 #
-xmax = 7.5
-ichoice = 1
+xmax = 15.0
+ichoice = 2
 errors = True
 
 # Define another numpy array which goes from 0 to xmax, in steps
@@ -137,10 +140,12 @@ xfit = np.arange(0.0,xmax,0.1)
 # Plot the fit(s), based upon the choices made above
 #
 if (ichoice == 1 or ichoice==3):
+     
     plt.plot(xfit,quadfunction(xfit,*popt),'r-',
          label='quad fit: a=%5.3f +/- %5.3f,\n b=%5.3f +/- %5.3f,\n c=%5.3f +/- %5.3f,\n X^2/dof = %5.3f' % 
          (popt[0],perr[0],popt[1],perr[1],popt[2],perr[2],chisqdof))
 
+    # plotting the range of fits
     psi = np.random.multivariate_normal(popt,pcov,10000)
     ysamplei=np.asarray([quadfunction(xfit,*pi) for pi in psi])
     loweri = np.percentile(ysamplei,16.0,axis=0)
